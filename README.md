@@ -1,4 +1,5 @@
 Rank-based Gene Ontology Analysis with Adaptive Clustering
+----------------------------------------------------------
 
 Mikhail V. Matz
 UT Austin, May 2012 - February 2015
