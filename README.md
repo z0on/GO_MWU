@@ -1,5 +1,8 @@
-Rank-based Gene Ontology Analysis with Adaptive Clustering 
-Mikhail V. Matz, UT Austin, May 2012 - February 2015; matz@utexas.edu
+Rank-based Gene Ontology Analysis with Adaptive Clustering
+
+Mikhail V. Matz
+UT Austin, May 2012 - February 2015
+matz@utexas.edu
 
 Windows users: make sure perl is installed and is in your system's PATH 
 (or you can specify the path to perl executable explicitly).
