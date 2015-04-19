@@ -186,12 +186,12 @@ Output Files
 
 The script generates three tables:
 
-<division>_<input filename> : main data table containing reformatted and augmented 
+(GO division)_(input filename) : main data table containing reformatted and augmented 
 GO terms for each gene (in addition to the originally listed terms, the script finds 
 all their parental terms if any were missing), and measures of interest. 
 
-dissim_<division>_<go-to-gene table filename> : dissimilarity matrix of GO categories 
+dissim_(GO division)_(go-to-gene table filename) : dissimilarity matrix of GO categories 
 based on the number of genes shared between them in the dataset. 
 
-MWU_<division>_<input filename> : the results of MWU test
+MWU_(GO division)_(input filename) : the results of MWU test
 
