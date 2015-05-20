@@ -1,5 +1,5 @@
-Rank-based Gene Ontology Analysis with Adaptive Clustering
-----------------------------------------------------------
+#	Rank-based Gene Ontology Analysis with Adaptive Clustering
+
 
 Mikhail V. Matz
 UT Austin, May 2012 - February 2015
@@ -8,7 +8,6 @@ matz@utexas.edu
 Windows users: make sure perl is installed and is in your system's PATH 
 (or you can specify the path to perl executable explicitly).
 
-====================================================================
 
 Short Guide 
 -----------
@@ -41,15 +40,15 @@ achieve better "word map" effect, rerun gomwuPlot with modified "txtsize" parame
 
 5. Save the plot as pdf file.
    
-The Output:
+###	The Output:
 
 The plot consists of three parts: 
 
-	- Hierarchical clustering tree of significant GO categories based on shared genes 
+-	Hierarchical clustering tree of significant GO categories based on shared genes 
 	in the current dataset. Categories with no branch length between them are subsets 
 	of each other and their significance is most likely driven by the same genes.
 
-	- Category names, plotted in different colors and fonts. Fonts indicate the level of 
+-	Category names, plotted in different colors and fonts. Fonts indicate the level of 
 	statistical significance, colors indicate enrichment of GO categories with either 
 	up- (red) or down- (blue) regulated genes. The category names are preceded by the 
 	fraction indicating the number of "good candidates" relative to the total number of 
@@ -65,7 +64,7 @@ The plot consists of three parts:
 	measure) the colors are not used; specify absValue=0.5 to make the script display
 	the fraction of significant genes (measure = 1) within a GO category. 
 	
-	- The legend giving the correspondence of the fonts to significance thresholds. The 
+-	The legend giving the correspondence of the fonts to significance thresholds. The 
 	method corrects the p-values using Benjamini-Hochberg false discovery rate procedure. 
 	To set different thresholds for plotting, change parameters 'level1', 'level2' and 
 	'level3' in gomwuPlot.
@@ -74,7 +73,6 @@ In addition, the script prints out the number of GO categories displayed and the
 of "good candidates" that these categories account for. This is useful to evaluate whether
 the generated GO summary really accounts for a substantial portion of what was going on.
 
-++++++++++++++++++++++++++++++++++++++++++++
 
 How it works
 ------------
@@ -136,21 +134,15 @@ Details on the input format
 
 The GO annotations table should have two tab-delimited columns: gene name, and a string 
 of concatenated GO terms separates by semicolons, like this: 
-
-isogroup0	GO:0016301;GO:0005515;GO:0007507;GO:0030239;GO:0065007;GO:0008152;GO:0030017
-
+```
+isogroup0	GO:0016301;GO:0005515;GO:0007507;GO:0030239;GO:0065007
 isogroup10	GO:0044424
-
 isogroup100	GO:0006810;GO:0080090;GO:0023033;GO:0065008;GO:0044237;GO:0051649
-
 isogroup10001	GO:0009987;GO:0000323;GO:0016787
-
 isogroup10002	GO:0005488
-
 isogroup10004	unknown
-
 ....
-
+```
 (the genes without annotation should be called "unknown", if you want to analyze these too)
 
 NB: The table must contain just a single line per gene. If you have a table in which
@@ -167,6 +159,7 @@ measures that must be associated with GO enrichment (for example, kME value, p-v
 or dN/dS value). The table should have a header line, but what is in it is irrelevant. 
 The first column should contain the  gene name, and the second - the measure of interest:
 
+```sh
 gene,logP
 isogroup0,8.3
 isogroup1,2
@@ -180,6 +173,7 @@ isogroup10003,-0.3
 isogroup10004,1.5
 isogroup10006,-6.9
 ...
+```
 The test file provided here is called "heats.csv". It contains the results of
 gene expression profiling of coral response to long-term heat stress, in the 
 form of "signed negative log p-values". These measures are negative decimal
@@ -201,4 +195,3 @@ dissim_(GO division)_(go-to-gene table filename) : dissimilarity matrix of GO ca
 based on the number of genes shared between them in the dataset. 
 
 MWU_(GO division)_(input filename) : the results of MWU test
-
