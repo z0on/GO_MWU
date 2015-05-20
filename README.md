@@ -138,12 +138,19 @@ The GO annotations table should have two tab-delimited columns: gene name, and a
 of concatenated GO terms separates by semicolons, like this: 
 
 isogroup0	GO:0016301;GO:0005515;GO:0007507;GO:0030239;GO:0065007;GO:0008152;GO:0030017
+
 isogroup10	GO:0044424
+
 isogroup100	GO:0006810;GO:0080090;GO:0023033;GO:0065008;GO:0044237;GO:0051649
+
 isogroup10001	GO:0009987;GO:0000323;GO:0016787
+
 isogroup10002	GO:0005488
+
 isogroup10004	unknown
+
 ....
+
 (the genes without annotation should be called "unknown", if you want to analyze these too)
 
 NB: The table must contain just a single line per gene. If you have a table in which
