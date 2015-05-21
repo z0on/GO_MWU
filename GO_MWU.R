@@ -21,7 +21,7 @@
 input="heats.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="amil_defog_iso2go.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="MF" # either MF, or BP, or CC
+goDivision="CC" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -39,10 +39,10 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 # Plotting results
 quartz()
 gomwuPlot(input,goAnnotations,goDivision,
-	absValue=0.5,  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.5 if you are doing Fisher's exact test for standard GO enrichment.
-	level1=1, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-	level2=0.05, # FDR cutoff to print in regular (not italic) font.
-	level3=0.01, # FDR cutoff to print in large bold font.
+	absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.5 if you are doing Fisher's exact test for standard GO enrichment.
+	level1=0.01, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+	level2=0.005, # FDR cutoff to print in regular (not italic) font.
+	level3=0.001, # FDR cutoff to print in large bold font.
 	txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
 	treeHeight=0.3, # height of the hierarchical clustering tree
 )
