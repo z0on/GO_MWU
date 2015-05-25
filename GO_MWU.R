@@ -31,7 +31,7 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
 	smallest=5,   # a GO category should contain at least this many genes to be considered
 	clusterCutHeight=0.25, # threshold for merging similar (gene-sharing) terms. 
-#	Alternative="g" 
+#	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead
 )
 # do not continue if the printout shows that no GO terms pass 10% FDR.
 
@@ -40,11 +40,11 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 quartz()
 gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.5 if you are doing Fisher's exact test for standard GO enrichment.
-	level1=0.01, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-	level2=0.005, # FDR cutoff to print in regular (not italic) font.
-	level3=0.001, # FDR cutoff to print in large bold font.
+	level1=0.1, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+	level2=0.05, # FDR cutoff to print in regular (not italic) font.
+	level3=0.01, # FDR cutoff to print in large bold font.
 	txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-	treeHeight=0.3, # height of the hierarchical clustering tree
+	treeHeight=0.5, # height of the hierarchical clustering tree
 )
 # manually rescale the plot so the tree matches the text 
 # if there are too many categories displayed, try make it more stringent with level1=0.01,level2=0.005,level3=0.001.  

@@ -130,7 +130,7 @@ fisherTest=function(gotable) {
 }
 
 #-------------------------
-gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3=0.01,absValue=-log(0.05,10),adjusted=TRUE,txtsize=1,font.family="sans",treeHeight=0.5) {
+gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3=0.01,absValue=-log(0.05,10),adjusted=TRUE,txtsize=1,font.family="sans",treeHeight=0.5,colors=NULL) {
 	require(ape)
 	
 	input=inFile
@@ -157,9 +157,11 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 		goods=heat[row.names(heat) %in% goods.names,]
 	}
 	
-	colors=c("dodgerblue2","firebrick1","skyblue","lightcoral")
-	if (sum(goods$direction)==nrow(goods) | sum(goods$direction)==0) { 
-		colors=c("black","black","grey50","grey50")
+	if (is.null(colors) | length(colors)<4 ) {
+		colors=c("dodgerblue2","firebrick1","skyblue","lightcoral")
+		if (sum(goods$direction)==nrow(goods) | sum(goods$direction)==0) { 
+			colors=c("black","black","grey50","grey50")
+		}
 	}
 	goods.names=row.names(goods)
 	
