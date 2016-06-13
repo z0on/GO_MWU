@@ -9,9 +9,9 @@ clusteringGOs=function(gen2go,div,cutHeight) {
 }
 
 #---------------
-gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl"){
+gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl"){
 
-	extraOptions=paste("largest=",largest," smallest=",smallest,"cutHeight=",clusterCutHeight,sep="")
+	extraOptions=paste("largest=",largest," smallest=",smallest," cutHeight=",clusterCutHeight,sep="")
 
 	system(paste(perlPath,"./gomwu_a.pl",goDatabase,goAnnotations,input,goDivision,extraOptions))
 	clusteringGOs(goAnnotations,goDivision,clusterCutHeight)
@@ -20,18 +20,37 @@ gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Alternative="t",
 	inname=paste(goDivision,"_",input,sep="")	
 	rsq=read.table(inname,sep="\t",header=T)
 	rsq$term=as.factor(rsq$term)
-	
+
 	mwut.t=TRUE
 	if (length(levels(as.factor(rsq$value)))==2) {
 		cat("Binary classification detected; will perform Fisher's test\n");
 		mwut.t=F
 		rr=fisherTest(rsq)
 	} else {
-		cat("Continuous measure of interest: will perform MWU test\n");		
-		rr=mwuTest(rsq,Alternative)
+		if (Module==TRUE) {
+			rsq.f=rsq
+			rsq.f$value=as.numeric(rsq.f$value>0)
+			rr=fisherTest(rsq.f)
+			rsq.m=rsq[rsq$value>0,]
+			rsq.m$co=1
+			st=aggregate(rsq.m[,"co"],list(rsq.m$term),sum)
+			goodgos=st$Group.1[st$x>=smallest]
+			rsq.m=rsq.m[rsq.m$term %in% goodgos,]
+			rsq.m$term=factor(rsq.m$term,levels=unique(rsq.m$term))
+			rrm=mwuTest(rsq.m,"g")
+			rr0=rr[rr$term %in% rrm$term,]
+			rr1=rr[!(rr$term %in% rrm$term),]
+			rr0=rr0[order(rr0$term),]
+			rrm=rrm[order(rrm$term),]
+			rr0$pval=rr0$pval*rrm$pval
+			rr=rbind(rr0,rr1)
+		} else {
+			cat("Continuous measure of interest: will perform MWU test\n");		
+			rr=mwuTest(rsq,Alternative)
+		  }
 	}
 	
-	if (adjust.multcomp=="shuffle"){
+	if (adjust.multcomp=="shuffle" & Module==FALSE){
 	 cat("shuffling values to calculate FDR, 5 reps\n")
 	 reps=5
 	 spv=c()
