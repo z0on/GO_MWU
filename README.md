@@ -187,9 +187,9 @@ down-regulated genes get highly negative values.
 Analyzing WGCNA modules
 ------------ 
 
-In this case the method does two layers of testing: first, global Fisher's exact test for presence-absence of functional categories in the module, and second, within-module MWU test for association of the included functional categories with higher kME values (module membership scores). The result is the product of the two p-values.
+In this case the method does two layers of testing: first, global Fisher's exact test for presence-absence of functional categories in the module, and second, within-module MWU test for association of the included functional categories with higher kME values (module membership scores). The product of the two p-values is the new test statistic, the false discovery rate is then determined using permutations.
 
-To perform this analysis, the input data file should list all genes that were used in WGCNA; the genes that are not included in the module should receive a significance measure of 0, and genes within the module - a kME value. During the analysis you should add 'Module=TRUE' option when running gomwuStats() (see comments in the GO_MWU.R script).
+To perform this analysis, the input data file should list all genes that were used in WGCNA; the genes that are not included in the module should receive a significance measure of 0, and genes within the module - a kME value. Add 'Module=TRUE,adjust.multcomp="shuffle"' optionx when running gomwuStats() (see comments in the GO_MWU.R script).
  
 Output Files
 ------------ 
