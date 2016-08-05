@@ -18,10 +18,10 @@
 
 
 # Edit these to match your data file names: 
-input="blue.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
+input="heats.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="amil_defog_iso2go.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="MF" # either MF, or BP, or CC
+goDivision="CC" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -31,8 +31,8 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
 	smallest=5,   # a GO category should contain at least this many genes to be considered
 	clusterCutHeight=0.25, # threshold for merging similar (gene-sharing) terms. 
-#	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead
-	Module=TRUE # un-remark this if you are analyzing a WGCNA module (values: 0 for not in module genes, kME for in-module genes)
+#	Alternative="g" # by default the MWU test is two-tailed; specify "g" or "l" of you want to test for "greater" or "less" instead. If Module==TRUE the method switches to one-tailed "g" option (assuming signed modules) 
+#	Module=TRUE, adjust.multcomp="shuffle" # un-remark this if you are analyzing a WGCNA module (values: 0 for not in module genes, kME for in-module genes). In the call to gomwuPlot below, specify absValue=0.5 (count number of "good genes" that fall into the module)
 )
 # do not continue if the printout shows that no GO terms pass 10% FDR.
 
@@ -40,8 +40,8 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 # Plotting results
 quartz()
 gomwuPlot(input,goAnnotations,goDivision,
-#	absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.5 if you are doing Fisher's exact test for standard GO enrichment or analyzing WGCNA module based on comb.
-	absValue=0.5,
+	absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". Specify absValue=0.5 if you are doing Fisher's exact test for standard GO enrichment or analyzing WGCNA module.
+#	absValue=0.5,
 	level1=0.1, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
 	level2=0.05, # FDR cutoff to print in regular (not italic) font.
 	level3=0.01, # FDR cutoff to print in large bold font.
