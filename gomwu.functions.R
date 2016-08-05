@@ -12,7 +12,7 @@ clusteringGOs=function(gen2go,div,cutHeight) {
 gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl", shuffle.reps=10){
 
 	extraOptions=paste("largest=",largest," smallest=",smallest," cutHeight=",clusterCutHeight,sep="")
-	if (Module==TRUE) { Alternative="g" }
+	if (Module==TRUE) { adjust.multcomp="shuffle" }
 	system(paste(perlPath,"./gomwu_a.pl",goDatabase,goAnnotations,input,goDivision,extraOptions))
 	clusteringGOs(goAnnotations,goDivision,clusterCutHeight)
 	system(paste(perlPath,"./gomwu_b.pl",goAnnotations,input,goDivision))
