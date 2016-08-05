@@ -2,7 +2,7 @@
 
 
 Mikhail V. Matz
-UT Austin, May 2012 - February 2015
+UT Austin, 
 matz@utexas.edu
 
 Windows users: make sure perl is installed and is in your system's PATH 
