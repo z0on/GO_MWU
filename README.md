@@ -8,6 +8,7 @@ matz@utexas.edu
 Windows users: make sure perl is installed and is in your system's PATH 
 (or you can specify the path to perl executable explicitly).
 
+![alt tag](https://static-content.springer.com/image/art%3A10.1186%2Fs12864-015-1540-2/MediaObjects/12864_2015_1540_Fig3_HTML.gif)
 
 Short Guide 
 -----------
