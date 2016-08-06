@@ -8,6 +8,7 @@ matz@utexas.edu
 Windows users: make sure perl is installed and is in your system's PATH 
 (or you can specify the path to perl executable explicitly).
 
+![alt tag](https://github.com/z0on/GO_MWU/blob/master/heats_cc_gomwu.pdf)
 
 Short Guide 
 -----------
