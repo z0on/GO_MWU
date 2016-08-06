@@ -65,7 +65,7 @@ The plot consists of three parts:
 	the fraction of significant genes (measure = 1) within a GO category. 
 	
 -	The legend giving the correspondence of the fonts to significance thresholds. The 
-	method corrects the p-values using Benjamini-Hochberg false discovery rate procedure. 
+	method corrects the p-values using Benjamini-Hochberg false discovery rate procedure except when analyzing WGCNA modules; in that case the false discovery rate is determined from ten permutations where significance measures are randomly shuffled among genes. 
 	To set different thresholds for plotting, change parameters 'level1', 'level2' and 
 	'level3' in gomwuPlot.
 
@@ -74,14 +74,20 @@ of "good candidates" that these categories account for. This is useful to evalua
 the generated GO summary really accounts for a substantial portion of what was going on.
 
 
+Suggested citation
+------------------
+In its present form GO_MWU method was first used in:
+Wright, R. M., Aglyamova, G. V., Meyer, E.  and Matz, M. V. Gene expression associated with white syndromes in a reef-building coral, Acropora hyacinthus. BMC Genomics 2015, 16: 371. 
+( http://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-015-1540-2 )
+
+
 How it works
 ------------
 
-In contrast to most other "GO enrichment analysis" methods (e.g., GeneMerge by 
-Castillo-Davis, Hartl, 2003), this one does not look for GO categories enriched 
+In contrast to most other "GO enrichment analysis" methods (e.g., GeneMerge or DAVID), this one does not look for GO categories enriched 
 among "significant" genes. 
 
-Instead, it measures whether each GO category is significantly enriched by up or 
+Instead, it measures whether each GO category is significantly enriched by either up or 
 down-regulated genes. Basically, the method tests whether the genes belonging 
 to a certain GO category are significantly bunched up near the top or the bottom 
 of the global ranked list of genes, instead of being spread evenly all over it. The
@@ -121,7 +127,6 @@ In the final plot, the method shows hierarchical clustering of GO categories bas
 the number of genes shared between them, to indicate which categories might be 
 significant because of the same genes. 
 
-
 Where does it come from
 -----------------------
 
@@ -129,7 +134,6 @@ The MWU-based method of GO analysis was first introduced in Nielsen et al PLoS B
 3:e170. Its was used together with the hierarchical clustering of displayed GO categories 
 in Kosiol et al PLoS Genet 2008, 4:e1000144 and Voolstra et al PLoS ONE 2011, 
 6(5): e20392. A related rank-based method of GO analysis is GSET: doi:pnas.0506580102.
-
 
 Details on the input format
 ---------------------------
@@ -187,9 +191,9 @@ down-regulated genes get highly negative values.
 Analyzing WGCNA modules
 ------------ 
 
-In this case the method does two layers of testing: first, global Fisher's exact test for presence-absence of functional categories in the module, and second, within-module MWU test for association of the included functional categories with higher kME values (module membership scores). The product of the two p-values is the new test statistic, the false discovery rate is then determined using permutations.
+In this case the method does two layers of testing: first, global Fisher's exact test for presence-absence of functional categories in the module, and second, within-module MWU test for association of the included functional categories with higher kME values (module membership scores). The product of the two p-values becomes the new test statistic. The false discovery rate is then determined from ten permutations where significance measures are randomly shuffled among genes.
 
-To perform this analysis, the input data file should list all genes that were used in WGCNA; the genes that are not included in the module should receive a significance measure of 0, and genes within the module - a kME value. Add 'Module=TRUE,adjust.multcomp="shuffle"' optionx when running gomwuStats() (see comments in the GO_MWU.R script).
+To perform this analysis, the input data file should list all genes that were used in WGCNA; the genes that are not included in the module should receive a significance measure of 0, and genes within the module - a kME value. If you are analysing signed WGCNA modules, add 'Module=TRUE,Alternative="g"' option when running gomwuStats(); for unsigned modules, just 'Module=TRUE' (see comments in the GO_MWU.R script).
  
 Output Files
 ------------ 
