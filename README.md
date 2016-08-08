@@ -62,8 +62,9 @@ The plot consists of three parts:
 	containing "good candidates", which is a good way to summarize the whole GO content 
 	of the experiment. Note that 'absValue' parameter does not affect statistics and 
 	serves just the illustrative purpose. In the Fisher-test mode (binary significance
-	measure) the colors are not used; specify absValue=0.5 to make the script display
-	the fraction of significant genes (measure = 1) within a GO category. 
+	measure) and signed WGCNA module analysis the colors are not used; in that case specify 
+	absValue=0.001 to make the script display the fraction of genes with non-zero measure
+	within a GO category. 
 	
 -	The legend giving the correspondence of the fonts to significance thresholds. The 
 	method corrects the p-values using Benjamini-Hochberg false discovery rate procedure except when analyzing WGCNA modules; in that case the false discovery rate is determined from ten permutations where significance measures are randomly shuffled among genes. 
