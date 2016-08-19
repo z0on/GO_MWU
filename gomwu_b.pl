@@ -153,7 +153,7 @@ my %dnds;
 my $inname4="dissim_".$div."_".$gen2go;
 my $inname3=$div."_".$measure;
 
-if($dones!~/ $inname4 /) { 
+#if($dones!~/ $inname4 /) { 
 
 	use List::Util qw[min max];
 	open TAB, $inname3 or die "go_cluster: cannot open input table $inname3\n";
@@ -214,4 +214,4 @@ if($dones!~/ $inname4 /) {
 		}
 		print {OUT} "\n";
 	}
-}
+#}

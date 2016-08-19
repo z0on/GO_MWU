@@ -263,3 +263,32 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	par(old.par)	
 
 }
+
+#------------------
+# returns non-overlapping GO categories based on dissimilarity table
+
+indepGO=function(dissim.table,min.similarity=1) {
+	tt=read.table(dissim.table,sep="\t", header=TRUE)
+	tt=as.matrix(tt)
+	diag(tt)=1
+	for (i in 1:ncol(tt)) {	
+		mins=apply(tt,2,min)
+		if (min(mins)>=min.similarity) { break }
+		sums=apply(tt,2,sum)
+		worst=which(sums==min(sums))[1]
+		# cat("\n",worsts,"\n")
+		# gw=c()
+		# for(w in worsts) { gw=append(gw,sum(tt[,w]==1)) }
+		# cat(gw)
+		# worst=worsts[gw==min(gw)]
+#		cat("\n",i," removing",worst,"; sum =",sums[worst])
+		tt=tt[-worst,-worst]		
+		mins=mins[-worst]		
+#		cat(" new min =",min(mins))
+	}
+	goods=colnames(tt)
+	goods=gsub("GO\\.","GO:",goods)
+	goods=gsub("\\.GO",";GO",goods)
+	return(goods)
+}
+

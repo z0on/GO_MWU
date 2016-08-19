@@ -283,8 +283,8 @@ foreach $go (@gos) { push @goodgo, $go unless ($gonego{$go}==1); }
 ################################
 
 	#warn "comparing categories...\n"; 
-my $clfile="cl_".$inname31;
-if($dones!~/ $clfile /) { 
+#my $clfile="cl_".$inname31;
+#if($dones!~/ $clfile /) { 
 
 	use List::Util qw[min max];
 	for ($g1=0;$g1<=$#gos;$g1++){
@@ -329,7 +329,7 @@ if($dones!~/ $clfile /) {
 		print {OUT} "\n";
 	}
 	close OUT;
-}
+#}
 
 #print "calling clusteringGOs.R script ....\n";
 #	my $err=`Rscript clusteringGOs.R $inname31 $cutHeight `;
