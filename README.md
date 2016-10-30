@@ -116,8 +116,7 @@ GO categories. Then, fully redundant GO categories (i.e., containing exactly the
 genes) are collapsed under name of the lower-level (more specific) term. Then,
 highly similar categories are merged according to complete linkage clustering based on
 the fraction of shared genes. The distance measure for clustering, introduced in 
-Kosiol et al 2008, is the fraction of shared genes relative to the size of the smaller 
-of the two categories. The resulting hierarchical tree is then “cut” at the adjustable 
+Kosiol et al 2008, is the number of genes shared among the two GO categories within the analyzed dataset divided by the size of the smaller of the two categories. The resulting hierarchical tree is then “cut” at the adjustable 
 “height” ('cutTreeHeight' parameter in the call to gomwuStats) to merge clustered 
 categories. The default for cutTreeHeight is 0.25, implying that a group of categories 
 will be merged if the most dissimilar two of them share >75% of genes included in the 
