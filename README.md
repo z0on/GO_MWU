@@ -23,7 +23,7 @@ Short Guide
 	- table of measure of interest for your sequences: two columns of comma-separated 
 		values: gene id, continuous measure of significance such as log(fold-change) or
 		-log(p-value). To perform standard GO enrichment analysis based on Fisher's 
-		exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number betweem 0 and 1, module membership score) for genes included in the module.
+		exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number between 0 and 1, module membership score) for genes included in the module.
 	
 	It is important to have the latter two tables representing the whole 
 	genome (or transcriptome) - at least the portion that was measured -
