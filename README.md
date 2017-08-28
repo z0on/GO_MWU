@@ -21,8 +21,8 @@ Short Guide
 		tab-delimited, one line per gene, multiple GO terms separated by semicolon. 
 		If you have multiple lines per gene, use nrify_GOtable.pl to merge them.
 	- table of measure of interest for your sequences: two columns of comma-separated 
-		values: gene id, continuous measure of significance (such as fold-change or 
-		-log(p-value)). To perform standard GO enrichment analysis based on Fisher's 
+		values: gene id, continuous measure of significance such as log(fold-change) or
+		-log(p-value). To perform standard GO enrichment analysis based on Fisher's 
 		exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number betweem 0 and 1, module membership score) for genes included in the module.
 	
 	It is important to have the latter two tables representing the whole 
@@ -116,8 +116,7 @@ GO categories. Then, fully redundant GO categories (i.e., containing exactly the
 genes) are collapsed under name of the lower-level (more specific) term. Then,
 highly similar categories are merged according to complete linkage clustering based on
 the fraction of shared genes. The distance measure for clustering, introduced in 
-Kosiol et al 2008, is the fraction of shared genes relative to the size of the smaller 
-of the two categories. The resulting hierarchical tree is then “cut” at the adjustable 
+Kosiol et al 2008, is the number of genes shared among the two GO categories within the analyzed dataset divided by the size of the smaller of the two categories. The resulting hierarchical tree is then “cut” at the adjustable 
 “height” ('cutTreeHeight' parameter in the call to gomwuStats) to merge clustered 
 categories. The default for cutTreeHeight is 0.25, implying that a group of categories 
 will be merged if the most dissimilar two of them share >75% of genes included in the 
