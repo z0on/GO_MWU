@@ -1,12 +1,16 @@
 clusteringGOs=function(gen2go,div,cutHeight) {
 	inname=paste("dissim0_",div,"_",gen2go,sep="")
-	diss=read.table(inname,sep="\t",header=T,check.names=F)
-	row.names(diss)=names(diss)
-	hc=hclust(as.dist(diss),method="complete")
-	cc=cutree(hc,h=cutHeight)
 	outname=paste("cl_",inname,sep="")
-	write.csv(cc,file=outname,quote=F)
+	if (!file.exists(outname)) {
+		diss=read.table(inname,sep="\t",header=T,check.names=F)
+		row.names(diss)=names(diss)
+		hc=hclust(as.dist(diss),method="complete")
+		cc=cutree(hc,h=cutHeight)
+		write.csv(cc,file=outname,quote=F)
+	}
 }
+
+
 
 #---------------
 gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl", shuffle.reps=10){
@@ -261,12 +265,12 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	cat(paste("GO terms dispayed: ",length(goods.names)),"\n")
 	cat(paste("\"Good genes\" accounted for:  ", ngenes," out of ",totSum, " ( ",round(100*ngenes/totSum,0), "% )","\n",sep=""))
 	par(old.par)	
-
+	goods$pval=10^(-1*goods$pval)
+	return(goods)
 }
 
 #------------------
 # returns non-overlapping GO categories based on dissimilarity table
-
 indepGO=function(dissim.table,min.similarity=1) {
 	tt=read.table(dissim.table,sep="\t", header=TRUE)
 	tt=as.matrix(tt)
@@ -289,6 +293,5 @@ indepGO=function(dissim.table,min.similarity=1) {
 	goods=colnames(tt)
 	goods=gsub("GO\\.","GO:",goods)
 	goods=gsub("\\.GO",";GO",goods)
-	return(goods)
 }
 
