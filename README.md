@@ -134,7 +134,7 @@ Where does it come from
 The MWU-based method of GO analysis was first introduced in Nielsen et al PLoS Biol 2005, 
 3:e170. Its was used together with the hierarchical clustering of displayed GO categories 
 in Kosiol et al PLoS Genet 2008, 4:e1000144 and Voolstra et al PLoS ONE 2011, 
-6(5): e20392. A related rank-based method of GO analysis is GSET: doi:pnas.0506580102.
+6(5): e20392. A related rank-based method of GO analysis is GSEA: doi:pnas.0506580102.
 
 Details on the input format
 ---------------------------
