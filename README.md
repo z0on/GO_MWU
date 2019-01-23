@@ -16,7 +16,7 @@ Short Guide
 1. Put all this into the same directory:
 	- scripts: GO_MWU.R, gomwu_a.pl, gomwu_b.pl, gomwu.functions.R
 	- GO hierarchy file 
-		(version 1.0, http://www.geneontology.org/GO.downloads.ontology.shtml)
+		(go.obo, http://www.geneontology.org/GO.downloads.ontology.shtml)
 	- table of GO annotations for your sequences: two-column (gene id - GO terms), 
 		tab-delimited, one line per gene, multiple GO terms separated by semicolon. 
 		If you have multiple lines per gene, use nrify_GOtable.pl to merge them.
