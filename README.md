@@ -30,7 +30,7 @@ Short Guide
 	rather than some select group of genes since the test relies on comparing
 	the behavior of individual GO categories to the whole.
 
-2. Make sure you have perl and R. The R part requires package "ape", which 
+2. Make sure you have perl and R. Windows-based people: install perl from [here](http://strawberryperl.com/) and specify your perl.exe file with full path to it as the perlPath argument to function gomwuStats (inside the GO_MWU.R script). The R part requires package "ape", which 
 you might need to install prior to running this method.
 
 3. Open GO_MWU.R script; edit the input file names, mark and execute bits of code
