@@ -16,7 +16,7 @@ Short Guide
 1. Put all this into the same directory:
 	- scripts: GO_MWU.R, gomwu_a.pl, gomwu_b.pl, gomwu.functions.R
 	- GO hierarchy file 
-		(version 1.0, http://www.geneontology.org/GO.downloads.ontology.shtml)
+		(go.obo, http://www.geneontology.org/GO.downloads.ontology.shtml)
 	- table of GO annotations for your sequences: two-column (gene id - GO terms), 
 		tab-delimited, one line per gene, multiple GO terms separated by semicolon. 
 		If you have multiple lines per gene, use nrify_GOtable.pl to merge them.
@@ -30,7 +30,7 @@ Short Guide
 	rather than some select group of genes since the test relies on comparing
 	the behavior of individual GO categories to the whole.
 
-2. Make sure you have perl and R. The R part requires package "ape", which 
+2. Make sure you have perl and R. Windows-based people: install perl from [here](http://strawberryperl.com/) and specify your perl.exe file with full path to it as the perlPath argument to function gomwuStats (inside the GO_MWU.R script). The R part requires package "ape", which 
 you might need to install prior to running this method.
 
 3. Open GO_MWU.R script; edit the input file names, mark and execute bits of code
@@ -134,7 +134,7 @@ Where does it come from
 The MWU-based method of GO analysis was first introduced in Nielsen et al PLoS Biol 2005, 
 3:e170. Its was used together with the hierarchical clustering of displayed GO categories 
 in Kosiol et al PLoS Genet 2008, 4:e1000144 and Voolstra et al PLoS ONE 2011, 
-6(5): e20392. A related rank-based method of GO analysis is GSET: doi:pnas.0506580102.
+6(5): e20392. A related rank-based method of GO analysis is GSEA: doi:pnas.0506580102.
 
 Details on the input format
 ---------------------------
