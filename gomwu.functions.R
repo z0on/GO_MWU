@@ -181,7 +181,7 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	}
 	
 	if (is.null(colors) | length(colors)<4 ) {
-		colors=c("dodgerblue2","firebrick2","lightblue3","indianred1")
+		colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral")
 		if (sum(goods$direction)==nrow(goods) | sum(goods$direction)==0) { 
 			colors=c("black","black","grey50","grey50")
 		}
