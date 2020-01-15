@@ -13,7 +13,7 @@ clusteringGOs=function(gen2go,div,cutHeight) {
 
 
 #---------------
-gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl", shuffle.reps=10){
+gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl", shuffle.reps=20){
 
 	extraOptions=paste("largest=",largest," smallest=",smallest," cutHeight=",clusterCutHeight,sep="")
 	if (Module==TRUE) { adjust.multcomp="shuffle" }
@@ -34,16 +34,12 @@ gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Al
 		if (Module==TRUE) {
 			rsq.f=rsq
 			rsq.f$value=as.numeric(rsq.f$value>0)
-			rr=fisherTest(rsq.f)
+			rf=fisherTest(rsq.f)
 			rsq.m=rsq[rsq$value>0,]
-			rsq.m$co=1
-			st=aggregate(rsq.m[,"co"],list(rsq.m$term),sum)
-			goodgos=st$Group.1[st$x>=smallest]
-			rsq.m=rsq.m[rsq.m$term %in% goodgos,]
 			rsq.m$term=factor(rsq.m$term,levels=unique(rsq.m$term))
 			rrm=mwuTest(rsq.m,"g")
-			rr0=rr[rr$term %in% rrm$term,]
-			rr1=rr[!(rr$term %in% rrm$term),]
+			rr0=rf[rf$term %in% rrm$term,]
+			rr1=rf[!(rf$term %in% rrm$term),]
 			rr0=rr0[order(rr0$term),]
 			rrm=rrm[order(rrm$term),]
 			rr0$pval=rr0$pval*rrm$pval
@@ -55,14 +51,29 @@ gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Al
 	}
 	
 	if (adjust.multcomp=="shuffle"){
-	 cat("shuffling values to calculate FDR, ",shuffle.reps," reps\n")
+	 message("shuffling values to calculate FDR, ",shuffle.reps," reps")
 	 reps=shuffle.reps
 	 spv=c()
 	 for (i in 1:reps) {
-		 print(paste("replicate",i))
+		 message("replicate ",i)
 		 rsqq=rsq
 		 rsqq$value=sample(rsq$value)
+		 if (Module==TRUE) {
+			 rsq.f=rsqq
+			 rsq.f$value=as.numeric(rsq.f$value>0)
+			 rf=fisherTest(rsq.f)
+			 rsq.m=rsqq[rsqq$value>0,]
+			 rsq.m$term=factor(rsq.m$term,levels=unique(rsq.m$term))
+			 rrm=mwuTest(rsq.m,"g")
+			 rr0=rf[rf$term %in% rrm$term,]
+			 rr1=rf[!(rf$term %in% rrm$term),]
+			 rr0=rr0[order(rr0$term),]
+			 rrm=rrm[order(rrm$term),]
+			 rr0$pval=rr0$pval*rrm$pval
+			 rs=rbind(rr0,rr1)
+		} else {
 		 if (mwut.t==TRUE) { rs=mwuTest(rsqq,Alternative) } else { rs=fisherTest(rsqq) }
+		}
 		 spv=append(spv,rs$pval)
 	 }
 	 fdr=c()
@@ -74,7 +85,7 @@ gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Al
 	  fdr=p.adjust(rr$pval,method=adjust.multcomp)
 	}
 	 
-	cat(paste(sum(fdr<0.1)," GO terms at 10% FDR\n"))
+	message(sum(fdr<0.1)," GO terms at 10% FDR")
 	rr$p.adj=fdr
 	fname=paste("MWU_",inname,sep="")
 	write.table(rr,fname,row.names=F)
@@ -101,6 +112,7 @@ mwuTest=function(gotable,Alternative) {
 		n1=length(sgo.yes)
 		sgo.no=ngot$seq
 		n2=length(sgo.no)
+#message(t," wilcox:",n1," ",n2)
 		wi=wilcox.test(nrg[sgo.yes],nrg[sgo.no],alternative=Alternative)	# removed correct=FALSE 
 		r1=sum(rnk[sgo.yes])/n1
 		r0=sum(rnk[sgo.no])/n2
@@ -262,8 +274,8 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	text(left,top-step*3,paste("p < ",level2,sep=""),font=1,cex=0.8* txtsize,adj=c(0,0),family=font.family)
 	text(left,top-step*4,paste("p < ",10^(-cutoff),sep=""),font=3,col="grey50",cex=0.8* txtsize,adj=c(0,0),family=font.family)
 	
-	cat(paste("GO terms dispayed: ",length(goods.names)),"\n")
-	cat(paste("\"Good genes\" accounted for:  ", ngenes," out of ",totSum, " ( ",round(100*ngenes/totSum,0), "% )","\n",sep=""))
+	message("GO terms dispayed: ",length(goods.names))
+	message("\"Good genes\" accounted for:  ", ngenes," out of ",totSum, " ( ",round(100*ngenes/totSum,0), "% )")
 	par(old.par)	
 	goods$pval=10^(-1*goods$pval)
 	return(goods)
