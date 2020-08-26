@@ -25,7 +25,9 @@ goDivision="CC" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
-# Calculating stats. It might take ~3 min for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+# ------------- Calculating stats
+# It might take a few minutes for MF and BP. Do not rerun it if you just want to replot the data with different cutoffs, go straight to gomwuPlot. If you change any of the numeric values below, delete the files that were generated in previos runs first.
+
 gomwuStats(input, goDatabase, goAnnotations, goDivision,
 	perlPath="perl", # replace with full path to perl executable if it is not in your system's PATH already
 	largest=0.1,  # a GO category will not be considered if it contains more than this fraction of the total number of genes
@@ -38,7 +40,8 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 # do not continue if the printout shows that no GO terms pass 10% FDR.
 
 
-# Plotting results
+# ----------- Plotting results
+
 quartz()
 results=gomwuPlot(input,goAnnotations,goDivision,
 	absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
@@ -56,18 +59,30 @@ results=gomwuPlot(input,goAnnotations,goDivision,
 # text representation of results, with actual adjusted p-values
 results[[1]]
 
-# ------- extracting GOs for provisional annotations
+
+# ------- extracting representative GOs
 
 # this module chooses GO terms that best represent *independent* groups of significant GO terms
-# i.e. these GO terms are best guesses at what the unknown gene does, but they are *mutually exclusive*
 
-pcut=1e-3 # adjusted pvalue cutoff to assign GOs to unknown genes
-ct=cutree(results[[2]],h=0.99)
-annots=c()
+pcut=1e-2 # adjusted pvalue cutoff for representative GO
+hcut=0.95 # heght at which cut the GO ters tree to get "independent groups". Unremark the following two lines to plot this
+#plot(results[[2]])
+#abline(h=hcut,col="red")
+
+ct=cutree(results[[2]],h=0.9)
+annots=c();ci=1
 for (ci in unique(ct)) {
-	rr=results[[1]][ct==ci,]
+	rn=names(ct)[ct==ci]
+	rr=results[[1]][rn,]
 	bestrr=rr[which(rr$pval==min(rr$pval)),]
-	if (bestrr$pval[1]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[1]))}
+	best=1
+	if(nrow(bestrr)>1) {
+		nns=sub(" .+","",row.names(bestrr))
+		fr=c()
+		for (i in 1:length(nns)) { fr=c(fr,eval(parse(text=nns[i]))) }
+		best=which(fr==max(fr))
+	}
+	if (bestrr$pval[best]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[best]))}
 }
 
 mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
