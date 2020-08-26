@@ -21,7 +21,7 @@
 input="heats.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="amil_defog_iso2go.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="MF" # either MF, or BP, or CC
+goDivision="CC" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -54,5 +54,23 @@ results=gomwuPlot(input,goAnnotations,goDivision,
 # if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
 
 # text representation of results, with actual adjusted p-values
-results
+results[[1]]
+
+# ------- extracting GOs for provisional annotations
+
+# this module chooses GO terms that best represent *independent* groups of significant GO terms
+# i.e. these GO terms are best guesses at what the unknown gene does, but they are *mutually exclusive*
+
+pcut=1e-3 # adjusted pvalue cutoff to assign GOs to unknown genes
+ct=cutree(results[[2]],h=0.99)
+annots=c()
+for (ci in unique(ct)) {
+	rr=results[[1]][ct==ci,]
+	bestrr=rr[which(rr$pval==min(rr$pval)),]
+	if (bestrr$pval[1]<=pcut) { annots=c(annots,sub("\\d+\\/\\d+ ","",row.names(bestrr)[1]))}
+}
+
+mwus=read.table(paste("MWU",goDivision,input,sep="_"),header=T)
+bestGOs=mwus[mwus$name %in% annots,]
+bestGOs
 

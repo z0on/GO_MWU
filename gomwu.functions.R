@@ -278,7 +278,7 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	message("\"Good genes\" accounted for:  ", ngenes," out of ",totSum, " ( ",round(100*ngenes/totSum,0), "% )")
 	par(old.par)	
 	goods$pval=10^(-1*goods$pval)
-	return(goods)
+	return(list(goods,cl.goods))
 }
 
 #------------------
