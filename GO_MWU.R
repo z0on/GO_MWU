@@ -21,7 +21,7 @@
 input="heats.csv" # two columns of comma-separated values: gene id, continuous measure of significance. To perform standard GO enrichment analysis based on Fisher's exact test, use binary measure (0 or 1, i.e., either sgnificant or not).
 goAnnotations="amil_defog_iso2go.tab" # two-column, tab-delimited, one line per gene, multiple GO terms separated by semicolon. If you have multiple lines per gene, use nrify_GOtable.pl prior to running this script.
 goDatabase="go.obo" # download from http://www.geneontology.org/GO.downloads.ontology.shtml
-goDivision="CC" # either MF, or BP, or CC
+goDivision="MF" # either MF, or BP, or CC
 source("gomwu.functions.R")
 
 
@@ -44,20 +44,20 @@ gomwuStats(input, goDatabase, goAnnotations, goDivision,
 
 quartz()
 results=gomwuPlot(input,goAnnotations,goDivision,
-	absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
-#	absValue=1, # un-remark this if you are using log2-fold changes
-	level1=0.1, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
-	level2=0.05, # FDR cutoff to print in regular (not italic) font.
-	level3=0.01, # FDR cutoff to print in large bold font.
-	txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
-	treeHeight=0.5, # height of the hierarchical clustering tree
-#	colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
-)
-# manually rescale the plot so the tree matches the text 
-# if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
-
-# text representation of results, with actual adjusted p-values
-results[[1]]
+ 	absValue=-log(0.05,10),  # genes with the measure value exceeding this will be counted as "good genes". This setting is for signed log-pvalues. Specify absValue=0.001 if you are doing Fisher's exact test for standard GO enrichment or analyzing a WGCNA module (all non-zero genes = "good genes").
+ #	absValue=1, # un-remark this if you are using log2-fold changes
+ 	level1=0.1, # FDR threshold for plotting. Specify level1=1 to plot all GO categories containing genes exceeding the absValue.
+ 	level2=0.05, # FDR cutoff to print in regular (not italic) font.
+ 	level3=0.01, # FDR cutoff to print in large bold font.
+ 	txtsize=1.2,    # decrease to fit more on one page, or increase (after rescaling the plot so the tree fits the text) for better "word cloud" effect
+ 	treeHeight=0.5, # height of the hierarchical clustering tree
+ #	colors=c("dodgerblue2","firebrick1","skyblue2","lightcoral") # these are default colors, un-remar and change if needed
+ )
+ # manually rescale the plot so the tree matches the text 
+ # if there are too many categories displayed, try make it more stringent with level1=0.05,level2=0.01,level3=0.001.  
+ 
+ # text representation of results, with actual adjusted p-values
+ results[[1]]
 
 
 # ------- extracting representative GOs
@@ -65,14 +65,21 @@ results[[1]]
 # this module chooses GO terms that best represent *independent* groups of significant GO terms
 
 pcut=1e-2 # adjusted pvalue cutoff for representative GO
-hcut=0.95 # heght at which cut the GO ters tree to get "independent groups". Unremark the following two lines to plot this
-#plot(results[[2]])
-#abline(h=hcut,col="red")
+hcut=0.9 # height at which cut the GO terms tree to get "independent groups". 
 
-ct=cutree(results[[2]],h=0.9)
+# plotting the GO tree with the cut level (un-remark the next two lines to plot)
+# plot(results[[2]],cex=0.6)
+# abline(h=hcut,col="red")
+
+# cutting
+ct=cutree(results[[2]],h=hcut)
 annots=c();ci=1
 for (ci in unique(ct)) {
+  message(ci)
 	rn=names(ct)[ct==ci]
+	obs=grep("obsolete",rn)
+	if(length(obs)>0) { rn=rn[-obs] }
+	if (length(rn)==0) {next}
 	rr=results[[1]][rn,]
 	bestrr=rr[which(rr$pval==min(rr$pval)),]
 	best=1
