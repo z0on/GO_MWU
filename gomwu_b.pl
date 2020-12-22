@@ -150,7 +150,7 @@ my %dnds;
 ####################
 # building dissimilarity matrix
 
-my $inname4="dissim_".$div."_".$gen2go;
+my $inname4="dissim_".$div."_".$measure."_".$gen2go;
 my $inname3=$div."_".$measure;
 
 #if($dones!~/ $inname4 /) { 

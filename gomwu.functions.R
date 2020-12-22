@@ -170,7 +170,7 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	
 	input=inFile
 	in.mwu=paste("MWU",goDivision,input,sep="_")
-	in.dissim=paste("dissim",goDivision,goAnnotations,sep="_")
+	in.dissim=paste("dissim",goDivision,input,goAnnotations,sep="_")
 	
 	cutoff=-log(level1,10)
 	pv=read.table(in.mwu,header=T)

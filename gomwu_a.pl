@@ -50,7 +50,7 @@ else { die "unrecognized division: $div\n";}
 my $inname2=$measure.".".$div.".tmp";
 my $inname3=$div."_".$measure;
 my $inname31="dissim0_".$div."_".$gen2go;
-my $inname4="dissim_".$div."_".$gen2go;
+my $inname4="dissim_".$div."_".$measure."_".$gen2go;
 
 my @donealready=();
 
