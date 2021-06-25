@@ -161,8 +161,8 @@ nrify_GOtable.pl [filename of the redundant table] > [filename of the non-redund
 The GO table provided with the scripts is called amil_defog_iso2go.tab
 
 The table of significance measures: it is the comma-separated (CSV) table of continuous
-measures that must be associated with GO enrichment (for example, kME value, p-value, 
-or dN/dS value). The table should have a header line, but what is in it is irrelevant. 
+measures that must be associated with GO enrichment (for example, log2 fold change, kME value,
+ dN/dS value). The table should have a header line, but what is in it is irrelevant. 
 The first column should contain the  gene name, and the second - the measure of interest:
 
 ```sh
@@ -187,7 +187,7 @@ logarithms of the raw (uncorrected) p-value for each gene, multiplied
 by -1 if the gene was down-regulated. As a result, highly significant 
 up-regulated genes get highly positive values, and highly significant
 down-regulated genes get highly negative values.
->NOTE: In read-based gene expression analysis (RNA-seq, TagSeq) using such "signed p-values" may result in bias towards GO terms including more abundant genes, such as ribosomal proteins, when the read depth is low. Use log2-fold changes to avoid this.
+>NOTE: In read-based gene expression analysis (RNA-seq, TagSeq) p-values may be biased towards highly abundant genes, especially when the read depth is low. This may result in the corresponding GO bias. Use log2-fold changes to avoid this.
 
 Analyzing WGCNA modules
 ------------ 
