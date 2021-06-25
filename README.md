@@ -21,8 +21,7 @@ Short Guide
 		tab-delimited, one line per gene, multiple GO terms separated by semicolon. 
 		If you have multiple lines per gene, use nrify_GOtable.pl to merge them.
 	- table of measure of interest for your sequences: two columns of comma-separated 
-		values: gene id, continuous measure of significance such as log(fold-change) or
-		-log(p-value). To perform standard GO enrichment analysis based on Fisher's 
+		values: gene id, continuous measure of change such as log(fold-change). To perform standard GO enrichment analysis based on Fisher's 
 		exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number between 0 and 1, module membership score) for genes included in the module.
 	
 	It is important to have the latter two tables representing the whole 
@@ -188,6 +187,7 @@ logarithms of the raw (uncorrected) p-value for each gene, multiplied
 by -1 if the gene was down-regulated. As a result, highly significant 
 up-regulated genes get highly positive values, and highly significant
 down-regulated genes get highly negative values.
+>NOTE: In read-based gene expression analysis (RNA-seq, TagSeq) using such "signed p-values" may result in bias towards GO terms including more abundant genes, such as ribosomal proteins, when the read depth is low. Use log2-fold changes to avoid this.
 
 Analyzing WGCNA modules
 ------------ 
