@@ -165,7 +165,7 @@ measures that must be associated with GO enrichment (for example, log2 fold chan
 The first column should contain the  gene name, and the second - the measure of interest:
 
 ```sh
-gene,logP
+gene,logFoldChange
 isogroup0,8.3
 isogroup1,2
 isogroup10,9.9
