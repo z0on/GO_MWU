@@ -100,8 +100,7 @@ the whole dataset can be used to gain information.
 
 In fact, no preliminary statistical test is required prior to the analysis; 
 the method is best suited to analyze the distribution of raw measures, 
-such as dN/dS values, log-fold-changes of gene expression, raw p-values, 
-or kME (correlation) values from WGCNA.
+such as dN/dS values, log-fold-changes of gene expression, or kME (correlation) values from WGCNA.
 
 The method can also be run in a traditional mode, looking for GO categories
 significantly over-represented among "significant genes" (based on Fisher's exact test).
