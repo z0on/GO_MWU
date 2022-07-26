@@ -21,8 +21,7 @@ Short Guide
 		tab-delimited, one line per gene, multiple GO terms separated by semicolon. 
 		If you have multiple lines per gene, use nrify_GOtable.pl to merge them.
 	- table of measure of interest for your sequences: two columns of comma-separated 
-		values: gene id, continuous measure of significance such as log(fold-change) or
-		-log(p-value). To perform standard GO enrichment analysis based on Fisher's 
+		values: gene id, continuous measure of change such as log(fold-change). To perform standard GO enrichment analysis based on Fisher's 
 		exact test, use binary measure (1 or 0, i.e., either sgnificant or not). To analyze modules derived from WGCNA, specify 0 for genes not included in the module and the kME value (number between 0 and 1, module membership score) for genes included in the module.
 	
 	It is important to have the latter two tables representing the whole 
@@ -101,8 +100,7 @@ the whole dataset can be used to gain information.
 
 In fact, no preliminary statistical test is required prior to the analysis; 
 the method is best suited to analyze the distribution of raw measures, 
-such as dN/dS values, log-fold-changes of gene expression, raw p-values, 
-or kME (correlation) values from WGCNA.
+such as dN/dS values, log-fold-changes of gene expression, or kME (correlation) values from WGCNA.
 
 The method can also be run in a traditional mode, looking for GO categories
 significantly over-represented among "significant genes" (based on Fisher's exact test).
@@ -162,12 +160,12 @@ nrify_GOtable.pl [filename of the redundant table] > [filename of the non-redund
 The GO table provided with the scripts is called amil_defog_iso2go.tab
 
 The table of significance measures: it is the comma-separated (CSV) table of continuous
-measures that must be associated with GO enrichment (for example, kME value, p-value, 
-or dN/dS value). The table should have a header line, but what is in it is irrelevant. 
+measures that must be associated with GO enrichment (for example, log2 fold change, kME value,
+ dN/dS value). The table should have a header line, but what is in it is irrelevant. 
 The first column should contain the  gene name, and the second - the measure of interest:
 
 ```sh
-gene,logP
+gene,logFoldChange
 isogroup0,8.3
 isogroup1,2
 isogroup10,9.9
@@ -188,6 +186,7 @@ logarithms of the raw (uncorrected) p-value for each gene, multiplied
 by -1 if the gene was down-regulated. As a result, highly significant 
 up-regulated genes get highly positive values, and highly significant
 down-regulated genes get highly negative values.
+>NOTE: In read-based gene expression analysis (RNA-seq, TagSeq) p-values may be biased towards highly abundant genes, especially when the read depth is low. This may result in the corresponding GO bias. Use log2-fold changes to avoid this.
 
 Analyzing WGCNA modules
 ------------ 
