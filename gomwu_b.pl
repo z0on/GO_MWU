@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use File::Basename;
+
 my $usage= "
 
 gomwu_b.pl  (v. Feb 2015):
@@ -15,9 +17,11 @@ Mikhail Matz, UT Austin; matz@utexas.edu
 
 my $gen2go=shift;
 my $measure=shift;
+($mname,$mdir,$mext) = fileparse($measure,'\..*');
+($aname,$adir,$aext) = fileparse($gen2go,'\..*');
 my $div=shift or die "$usage\nNot enough arguments for gomwu_b.pl\n";
 
-my $clfile="cl_dissim0_".$div."_".$gen2go; 
+my $clfile=$mdir."cl_dissim0_".$div."_".$aname.$aext; 
 open CLF, $clfile or die "cannot locate primary clustering file $clfile\n";
 my %clgo={};
 my $go;
@@ -31,14 +35,14 @@ while(<CLF>){
 close CLF;
 
 unlink $clfile;
-unlink "dissim0_".$div."_".$gen2go; 
+unlink $mdir."dissim0_".$div."_".$aname.$aext; 
 
-opendir THISDIR, ".";
+opendir THISDIR, $mdir;
 my @donealready=grep /$gen2go/, readdir THISDIR;
 my $dones=" "."@donealready"." ";
 #print "DONE: $dones\n";
 
-my $inname2=$measure.".".$div.".tmp";
+my $inname2=$mdir.$mname.".".$div.".tmp";
 open TAB, $inname2 or die "go_nrify: cannot open input table $inname2\n";
 <TAB>;
 my %level={};
@@ -119,7 +123,8 @@ foreach $cl (keys %clgo){
 }
 
 print $#nrgos+1," non-redundant GO categories of good size\n-------------\n"; 
-$outname=$div."_".$measure;
+$outname=$mdir.$mname."_".$div.".tsv";
+print("creating $outname");
 open OUT, ">$outname" or die "gomwu_b: cannot create output $outname\n";
 print {OUT} "name\tterm\tlev\tseq\tvalue\n";
 
@@ -150,8 +155,8 @@ my %dnds;
 ####################
 # building dissimilarity matrix
 
-my $inname4="dissim_".$div."_".$measure."_".$gen2go;
-my $inname3=$div."_".$measure;
+my $inname4=$mdir."dissim_".$div."_".$mname."_".$aname.$aext;
+my $inname3=$mdir.$mname."_".$div.".tsv";
 
 #if($dones!~/ $inname4 /) { 
 
@@ -159,13 +164,13 @@ my $inname3=$div."_".$measure;
 	open TAB, $inname3 or die "go_cluster: cannot open input table $inname3\n";
 	<TAB>;
 
-	my $des;
-	my $go; 
-	my $l;
-	my $gn;
-	my $val;
-	my @gos=();
-	my %genes={};
+	# my $des;
+	# my $go; 
+	# my $l;
+	# my $gn;
+	# my $val;
+	# my @gos=();
+	# my %genes={};
 	my %gosi={};
 
 	print"\nSecondary clustering:\ncalculating similarities....\n";

@@ -1,6 +1,17 @@
 clusteringGOs=function(gen2go,div,cutHeight) {
-	inname=paste("dissim0_",div,"_",gen2go,sep="")
-	outname=paste("cl_",inname,sep="")
+    nn <- strsplit(gen2go, "[/.]")
+    if (length(nn[[1]]) == 3) {
+        dir <- nn[[1]][1]
+        name <- nn[[1]][2]
+        ext <- nn[[1]][3]
+    } else if (length(nn[[1]]) == 2) {
+        dir <- "."
+        name <- nn[[1]][1]
+        ext <- nn[[1]][2]
+    }
+	inname=paste(dir,"/","dissim0_",div,"_",name,".",ext,sep="")
+
+	outname=paste(dir,"/","cl_dissim0_",div,"_",name,".",ext,sep="")
 	if (!file.exists(outname)) {
 		diss=read.table(inname,sep="\t",header=T,check.names=F)
 		row.names(diss)=names(diss)
@@ -19,15 +30,28 @@ clusteringGOs=function(gen2go,div,cutHeight) {
 
 
 #---------------
-gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl", shuffle.reps=20){
+gomwuStats=function(input,goDatabase,goAnnotations, goDivision, scriptdir, Module=FALSE, Alternative="t", adjust.multcomp="BH", clusterCutHeight=0.25,largest=0.1,smallest=5,perlPath="perl", shuffle.reps=20){
+
+    nn <- strsplit(input, "[/.]")
+    if (length(nn[[1]]) == 3) {
+        dir <- nn[[1]][1]
+        name <- nn[[1]][2]
+        ext <- nn[[1]][3]
+    } else if (length(nn[[1]]) == 2) {
+        dir <- "."
+        name <- nn[[1]][1]
+        ext <- nn[[1]][2]
+    }
 
 	extraOptions=paste("largest=",largest," smallest=",smallest," cutHeight=",clusterCutHeight,sep="")
 	if (Module==TRUE) { adjust.multcomp="shuffle" }
-	system(paste(perlPath,"./gomwu_a.pl",goDatabase,goAnnotations,input,goDivision,extraOptions))
+    gomwu_a = paste(scriptdir, "gomwu_a.pl", sep="/")
+    gomwu_b = paste(scriptdir, "gomwu_b.pl", sep="/")
+	system(paste(perlPath, gomwu_a,goDatabase,goAnnotations,input,goDivision,extraOptions))
 	clusteringGOs(goAnnotations,goDivision,clusterCutHeight)
-	system(paste(perlPath,"./gomwu_b.pl",goAnnotations,input,goDivision))
+	system(paste(perlPath, gomwu_b,goAnnotations,input,goDivision))
 
-	inname=paste(goDivision,"_",input,sep="")	
+	inname=paste(dir,"/",name,"_",goDivision,".tsv",sep="")	
 	rsq=read.table(inname,sep="\t",header=T)
 	rsq$term=as.factor(rsq$term)
 
@@ -93,8 +117,8 @@ gomwuStats=function(input,goDatabase,goAnnotations, goDivision, Module=FALSE, Al
 	 
 	message(sum(fdr<0.1)," GO terms at 10% FDR")
 	rr$p.adj=fdr
-	fname=paste("MWU_",inname,sep="")
-	write.table(rr,fname,row.names=F)
+	fname=paste(dir,"/","MWU_",goDivision,"_",name,".",ext,sep="")
+	write.table(rr,fname,sep = "\t", row.names=F)
 }
 
 #---------------------
@@ -174,14 +198,34 @@ fisherTest=function(gotable) {
 gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3=0.01,absValue=-log(0.05,10),adjusted=TRUE,txtsize=1,font.family="sans",treeHeight=0.5,colors=NULL) {
 	require(ape)
 	
-	input=inFile
-	in.mwu=paste("MWU",goDivision,input,sep="_")
-	in.dissim=paste("dissim",goDivision,input,goAnnotations,sep="_")
+    nn <- strsplit(inFile, "[/.]")
+    if (length(nn[[1]]) == 3) {
+        dir <- nn[[1]][1]
+        name <- nn[[1]][2]
+        ext <- nn[[1]][3]
+    } else if (length(nn[[1]]) == 2) {
+        dir <- "."
+        name <- nn[[1]][1]
+        ext <- nn[[1]][2]
+    }
+    aa <- strsplit(goAnnotations, "[/.]")
+    if (length(aa[[1]]) == 3) {
+        adir <- aa[[1]][1]
+        aname <- aa[[1]][2]
+        aext <- aa[[1]][3]
+    } else if (length(aa[[1]]) == 2) {
+        adir <- "."
+        aname <- aa[[1]][1]
+        aext <- aa[[1]][2]
+    }
+	# input=inFile
+	in.mwu=paste(dir,"/",paste("MWU",goDivision,name,sep="_"), ".", ext,sep="")
+	in.dissim=paste(dir, "/", paste("dissim",goDivision,name,aname,sep="_"), ".", aext, sep="")
 	
 	cutoff=-log(level1,10)
 	pv=read.table(in.mwu,header=T)
 	row.names(pv)=pv$term
-	in.raw=paste(goDivision,input,sep="_")
+	in.raw=paste(dir,"/",paste(name,goDivision,sep="_"), ".tsv", sep="")
 	rsq=read.table(in.raw,sep="\t",header=T)
 	rsq$term=as.factor(rsq$term)
 	
@@ -241,13 +285,16 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 
     par(mar = c(2,2,0.85,0))
 	plot(as.phylo(cl.goods),show.tip.label=FALSE,cex=0.0000001)
-	step=100
-	left=1
-	top=step*(2+length(labs))
 
-    par(mar = c(0,0,0.3,0))
-	plot(c(1:top)~c(1:top),type="n",axes=F,xlab="",ylab="")
-	ii=1
+    par(mar = c(2,0,1,0))
+	step=dev.size("px")[2]/(length(goods.names)-1)
+	left=1
+	top=step*(length(labs)-1)
+    # print(paste("Size:", dev.size("px")))
+    # print(paste("Good:", length(goods.names), "Step:", step, "Top:", top))
+
+	plot(c(1:top),c(1:top),type="n",axes=F,xlab="",ylab="")
+	ii=0
 	goods$color=1
 	goods$color[goods$direction==1 & goods$pval>cutoff]=colors[4]
 	goods$color[goods$direction==0 & goods$pval>cutoff]=colors[3]
@@ -256,7 +303,8 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	goods$color[goods$direction==1 & goods$pval>(-log(level3,10))]=colors[2]
 	goods$color[goods$direction==0 & goods$pval>(-log(level3,10))]=colors[1]
 	for (i in length(labs):1) {
-		ypos=top-step*ii
+		ypos=round(top-step*ii)
+        # print(paste("Ypos:", ypos))
 		ii=ii+1
 		if (goods$pval[i]> -log(level3,10)) { 
 			text(left,ypos,labs[i],font=2,cex=1*txtsize,col=goods$color[i],adj=c(0,0),family=font.family) 
@@ -275,7 +323,7 @@ gomwuPlot=function(inFile,goAnnotations,goDivision,level1=0.1,level2=0.05,level3
 	
     par(mar = c(3,1,1,0))
 	
-	plot(c(1:top)~c(1:top),type="n",axes=F,xlab="",ylab="")
+	plot(c(1:top),c(1:top),type="n",axes=F,xlab="",ylab="")
 	text(left,top-step*2,paste("p < ",level3,sep=""),font=2,cex=1* txtsize,adj=c(0,0),family=font.family)
 	text(left,top-step*3,paste("p < ",level2,sep=""),font=1,cex=0.8* txtsize,adj=c(0,0),family=font.family)
 	text(left,top-step*4,paste("p < ",10^(-cutoff),sep=""),font=3,col="grey50",cex=0.8* txtsize,adj=c(0,0),family=font.family)
